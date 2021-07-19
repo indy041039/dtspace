@@ -65,6 +65,7 @@ class AutoML(BaseEstimator, ClassifierMixin):
         self.param_grid = param_grid
         self.test_size = test_size
         self.best_param = None
+        self.report = report
         self.model = model
         self.task = task
 
@@ -107,7 +108,7 @@ class AutoML(BaseEstimator, ClassifierMixin):
         self.sample_trans_X_train = trans_X_train.head(10)
         
         # Feature_selection
-        if feature_selection:
+        if self.feature_selection:
             trans_X_train = self.feature_selection.fit(trans_X_train, y_train)
 
         # Check if you want to tune hyperparameter
@@ -131,12 +132,12 @@ class AutoML(BaseEstimator, ClassifierMixin):
         # Fit preprocessor and model with all data available
         if train_all:
             trans_X = self.preprocessor.fit_transform(X)
-            if feature_selection:
+            if self.feature_selection:
                 trans_X = self.feature_selection.transform(trans_X, y)
             self.model.fit(trans_X, y)
 
         # Report everything
-        if report:
+        if self.report:
             pass
 
         return self
